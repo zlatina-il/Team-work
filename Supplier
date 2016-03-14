@@ -1,0 +1,97 @@
+using System;
+using System.Text.RegularExpressions;
+
+namespace BuildingCompanyDatabase
+{
+    public class Supplier : Person
+    {
+        //fields
+        private string phone;
+        private string eMail;
+        private string companyName;
+
+        //constructor
+        public Supplier(string firstName, string lastName, string phone, string eMail, string companyName)
+            : base(firstName, lastName)
+        {
+            this.phone = phone;
+            this.eMail = eMail;
+            this.companyName = companyName;
+        }
+
+        //properties
+        public string Phone
+        {
+            get
+            {
+                return this.phone;
+            }
+            set
+            {
+                if (this.phone.Length != 10)
+                {
+                    Console.WriteLine("The phone number must be with 10 digits!");
+                }
+                else
+                {
+                    Regex newregex = new Regex(@"^\d+$");
+                    Match match = newregex.Match( this.phone );
+
+                    if (match.Success) 
+                    {
+                        this.phone = value;
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Invalid phone number!");
+                    }
+                }
+                
+            }
+        }
+
+        public string EMail
+        {
+            get
+            {
+                return this.eMail;
+            }
+            set
+            {
+                string pattern = null;
+                pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
+
+                if (Regex.IsMatch("someone@example.com", pattern))
+                {
+                    this.eMail = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Not a valid Email address ");
+                } 
+            }
+        }
+
+        public string CompanyName
+        {
+            get
+            {
+                return this.companyName;
+            }
+            set
+            {
+                if (value == "" || value.Length > 20)
+                {
+                    throw new ArgumentException("Invalid name length!");
+                }
+                this.companyName = value;
+            }
+        }
+
+        //method
+        public override string PrintInfo()
+        {
+            return String.Format("{0} {1} \t Phone: {2}, Email: {3}", base.FirstName, base.LastName, this.phone, this.eMail);
+        }
+    }
+}
