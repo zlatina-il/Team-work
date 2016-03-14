@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BuildingCompanyDatabase
+{
+    public abstract class Materials
+    {
+        private Supplier supplier;
+        private double amount;
+
+        protected Materials(Supplier supplier, double amount)
+        {
+            this.supplier = supplier;
+            this.amount = amount;
+        }
+         //properties
+         public Supplier CurrentMaterialSupplier
+         {
+             get
+             {
+                 return this.supplier;
+             }
+             set
+             {
+                 if (value == null)
+                 {
+                     throw new ArgumentException("Enter supplier!");
+                 }
+                 this.supplier = value;
+             }
+         }
+
+         public double Amount
+         {
+             get
+             {
+                 return this.amount;
+             }
+             set
+             {
+                 if (value <= 0)
+                 {
+                     throw new ArgumentException("The amount must be positive number!");
+                 }
+                 this.amount = value;
+             }
+         }
+
+    }
+}
