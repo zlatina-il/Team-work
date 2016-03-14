@@ -1,0 +1,84 @@
+using System;
+
+namespace BuildingCompanyDatabase
+{
+    public class Worker : Person,IPayable
+    {
+        //fields
+        private DateTime startDate;
+        private DateTime endDate;
+        private decimal costPerDay;
+        public WorkerProffesion workerProffesion { get; private set; }
+
+        //constructor
+        public Worker(string firstName, string lastName, WorkerProffesion currentProf, DateTime startDate, decimal costPerDay, DateTime endDate)
+            : base(firstName, lastName)
+        {
+            this.workerProffesion = currentProf;
+            this.StartDate = startDate;
+            this.CostPerDay = costPerDay;
+            this.EndDate = endDate;
+        }
+
+        //properties
+        public DateTime StartDate
+        {
+            get
+            {
+                return this.startDate;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Enter a date !");
+                }
+                this.startDate = value;
+            }
+        }
+        public DateTime EndDate
+        {
+            get
+            {
+                return this.endDate;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Enter a date !");
+                }
+                this.endDate = value;
+            }
+        }
+
+        public decimal CostPerDay
+        {
+            get
+            {
+                return this.costPerDay;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The payment per day must be positive number!");
+                }
+                this.costPerDay = value;
+            }
+        }
+      
+        //methods
+        public override string PrintInfo()
+        {
+            return String.Format("{0} {1} \t Profession: {2}\t Salary:{3:C2}", base.FirstName, base.LastName, this.workerProffesion,this.CalculateTotalCosts(endDate));
+        }
+
+        public decimal CalculateTotalCosts(DateTime today)
+        {
+            int workingDays = (today - this.startDate).Days;
+            return workingDays * this.costPerDay;
+        }
+       
+    }
+}
