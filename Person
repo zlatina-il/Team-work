@@ -1,0 +1,70 @@
+using System;
+
+namespace BuildingCompanyDatabase
+{
+    public abstract class Person
+    {
+        //fields
+        private string firstName;
+        private string lastName;
+
+        //constructor
+        protected Person(string firstName, string lastName)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        //properties
+        public string FirstName
+        {
+            get
+            {
+                return this.firstName;
+            }
+            set
+            {
+                if (value == "" || value.Length > 15)
+                {
+                    throw new ArgumentException("Invalid name length!");
+                }
+
+                foreach (char item in value)
+                {
+                    if (char.IsDigit(item))
+                    {
+                        throw new ArgumentException("Digits are not allowed!");
+                    }
+                }
+                this.firstName = value;
+            }
+        }
+
+        public string LastName
+        {
+            get
+            {
+                return this.lastName;
+            }
+            set
+            {
+                if (value == "" || value.Length > 15)
+                {
+                    throw new ArgumentException("Invalid name length!");
+                }
+
+                foreach (char item in value)
+                {
+                    if (char.IsDigit(item))
+                    {
+                        throw new ArgumentException("Digits are not allowed!");
+                    }
+                }
+                this.lastName = value;
+            }
+        }
+
+        //method
+        public abstract string PrintInfo();
+    }
+}
