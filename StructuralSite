@@ -1,0 +1,314 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BuildingCompanyDatabase
+{
+    public class StructuralSite : IExchangeableStuff, IExchangableMechanisation
+    {
+        //fields
+        private string location;
+        private List<Worker> workerList;
+        private Manager siteManager;
+        private Accountant siteAccountant;
+        private Account siteAccount;
+        private List<ConstructionMaterial> materialList;
+        private List<Consumables> consumablesList;
+        private List<Mechanisation> mechanisationList;
+        private List<Equipment> equipmentList;
+        public DateTime StartDate { get; private set; }
+
+        //constructor
+        public StructuralSite(string location, DateTime startDate ,Account account)
+        {
+            this.location = location;
+            this.siteAccount = account;
+            this.StartDate = startDate;
+        }
+        
+        //properties
+
+        public List<Mechanisation> MechanisationList
+        {
+            get
+            {
+                return this.mechanisationList;
+            }
+            set
+            {
+                this.mechanisationList = value;
+            }
+        }
+
+        public List<ConstructionMaterial> MaterialList
+        {
+            get
+            {
+                return this.materialList;
+            }
+            set
+            {
+                this.materialList = value;
+            }
+        }
+        public List<Consumables> ConsumablesList
+        {
+            get
+            {
+                return this.consumablesList;
+            }
+            set
+            {
+                this.consumablesList = value;
+            }
+        }
+
+        public string Location
+        {
+            get
+            {
+                return this.location;
+            }
+            set
+            {
+                if (value == "" || value.Length > 15)
+                {
+                    throw new ArgumentException("Invalid localisation length!");
+                }
+
+                foreach (char item in value)
+                {
+                    if (char.IsDigit(item))
+                    {
+                        throw new ArgumentException("Digits are not allowed!");
+                    }
+                }
+                this.location = value;
+            }
+        }
+
+        public List<Worker> WorkerList
+        {
+            get
+            {
+                return this.workerList;
+            }
+            set
+            {
+                this.workerList = value;
+            }
+        }
+
+        public Manager SiteManager
+        {
+            get
+            {
+                return this.siteManager;
+            }
+            set
+            {
+                this.siteManager = value;
+            }
+        }
+
+        public Accountant SiteAccountant
+        {
+            get
+            {
+                return this.siteAccountant;
+            }
+            set
+            {
+                this.siteAccountant = value;
+            }
+        }
+
+        public Account SiteAccount
+        {
+            get
+            {
+                return this.siteAccount;
+            }
+        }
+
+        //methods
+        public decimal BallanceToDate(DateTime calcDate)
+        {
+            int days = (calcDate - this.StartDate).Days;
+            return days * CalculateTotalCostPerDay();
+        }
+        public decimal CalculateTotalCostPerDay()
+        {
+            return siteAccount.CalculateDaysSpendings(this.workerList, this.mechanisationList, this.siteManager);
+        }
+
+        public void AddStuff(Worker currentWorker)
+        {
+            if (this.workerList == null)
+            {
+                this.workerList = new List<Worker>();
+            }
+            this.workerList.Add(currentWorker);
+        }
+
+        public void RemoveStuffAt(int index)
+        {
+            this.workerList.RemoveAt(index);
+        }
+
+        public void RemoveAllStuff()
+        {
+            this.workerList.Clear();
+        }
+
+        public void AddEquipment(Equipment currentEquiment)
+        {
+            if (this.equipmentList == null)
+            {
+                this.equipmentList = new List<Equipment>();
+            }
+            this.equipmentList.Add(currentEquiment);
+        }
+
+        public void RemoveAllEquipment()
+        {
+            this.equipmentList.Clear();
+        }
+        public void AddMaterial(ConstructionMaterial currentMaterial)
+        {
+            bool exists = false;
+            if (this.materialList == null)
+            {
+                this.materialList = new List<ConstructionMaterial>();
+            }
+            else
+            {
+                foreach (var mat in materialList)
+                {
+                    if (mat.type == currentMaterial.type)
+                    {
+                        mat.Amount += currentMaterial.Amount;
+                        exists = true;
+                    }
+                }
+            }
+
+            if (!exists)
+            {
+                this.materialList.Add(currentMaterial);
+            }
+        }
+        public void AddConsumable(Consumables currentConsumable)
+        {
+            bool exists = false;
+            if (this.consumablesList == null)
+            {
+                this.consumablesList = new List<Consumables>();
+            }
+            else
+            {
+                foreach (var mat in consumablesList)
+                {
+                    if (mat.type == currentConsumable.type)
+                    {
+                        mat.Amount += currentConsumable.Amount;
+                        exists = true;
+                    }
+                }
+            }
+
+            if (!exists)
+            {
+                this.consumablesList.Add(currentConsumable);
+            }
+        }
+        public void AddMechanisation(Mechanisation currentMechanisation)
+        {
+            if (this.mechanisationList == null)
+            {
+                this.mechanisationList = new List<Mechanisation>();
+            }
+            this.mechanisationList.Add(currentMechanisation);
+        }
+
+        public void RemoveMechanisationAt(int index)
+        {
+            this.mechanisationList.RemoveAt(index);
+        }
+
+        public void RemoveAllMechanisation()
+        {
+            this.mechanisationList.Clear();
+        }
+
+        public void AddManager(Manager currentManager)
+        {
+            this.SiteManager = currentManager;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Structural Site: ");
+            sb.Append(this.location);
+            sb.Append("\r\n\r\n");
+            sb.Append("Technical manager:\r\n");
+            sb.Append(new string('*', 60));
+            sb.Append("\r\n");
+            sb.Append(this.SiteManager.PrintInfo());
+            sb.Append("\r\n\r\n");
+
+            sb.Append("Workers available on the site:\r\n");
+            sb.Append(new string('*', 60));
+            sb.Append("\r\n");
+            foreach (var worker in this.workerList)
+            {
+                sb.Append(worker.PrintInfo());
+                sb.Append("\r\n");
+            }
+
+            sb.Append("\r\n\r\n");
+            sb.Append("Mechanisation available on the site:\r\n");
+            sb.Append(new string('*', 60));
+            sb.Append("\r\n");
+            foreach (var machine in this.mechanisationList)
+            {
+                sb.Append(machine.PrintMechanisationInfo());
+                sb.Append("\r\n");
+            }
+            sb.Append("\r\n\r\n");
+            sb.Append("Construcion materials on the site:\r\n");
+            
+            sb.Append(new string('*', 60));
+            sb.Append("\r\n");
+            foreach (var mat in this.materialList)
+            {
+                sb.Append(mat.PrintMaterialInfo());
+                sb.Append("\r\n");
+            }
+            sb.Append("\r\n\r\n");
+            sb.Append("Consumables on the site:\n");
+
+            sb.Append(new string('*', 60));
+            sb.Append("\r\n");
+            foreach (var cons in this.consumablesList)
+            {
+                sb.Append(cons.PrintConsumablesInfo());
+                sb.Append("\r\n");
+            }
+            sb.Append("\r\n\r\n");
+            sb.Append("Equipment on the site:\r\n");
+
+            sb.Append(new string('*', 60));
+            sb.Append("\r\n");
+            foreach (var equip in this.equipmentList)
+            {
+                sb.Append(equip.PrintEquipment());
+                sb.Append("\r\n");
+            }
+            return sb.ToString();
+
+
+        }
+    }
+}
