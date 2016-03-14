@@ -1,0 +1,72 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BuildingCompanyDatabase
+{
+    public class Account : IDepositable, IDrawable
+    {
+        //fields
+        private decimal balance;
+
+        //constructor
+        public Account(decimal balance)
+        {
+            this.balance = balance;
+        }
+
+        //properties
+        public decimal Balance
+        {
+            get 
+            { 
+                return this.balance; 
+            }
+            set 
+            { 
+                this.balance = value; 
+            }
+        }
+
+        public void AddDeposit(decimal deposit)
+        {
+            if (deposit < 0)
+            {
+                throw new ArgumentOutOfRangeException("Enter positive number!");
+            }
+            else
+            {
+                this.Balance = this.Balance + deposit;
+            }
+        }
+
+        public void Draw(decimal draw)
+        {
+            if (draw < 0)
+            {
+                throw new ArgumentOutOfRangeException("Enter positive number!");
+            }
+            else
+            {
+                this.Balance = this.Balance - draw;
+            }
+        }
+
+        public decimal CalculateDaysSpendings(List<Worker> currentWorkers, List<Mechanisation> currentMechanisation, Manager currentManager)
+        {
+            decimal sum = 0;
+            foreach (var s in currentWorkers)
+            {
+                sum += s.CostPerDay;
+            }
+            foreach (var s in currentMechanisation)
+            {
+                sum += s.CostPerDay;
+            }
+            sum += currentManager.CostPerDay;
+            return sum;
+        }
+    }
+}
