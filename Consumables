@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BuildingCompanyDatabase
+{
+    public class Consumables:Materials
+    {
+        //fields
+        public ConsumablesEnum type { get; private set; }
+
+        //constructor
+        public Consumables(ConsumablesEnum type, Supplier supplier, double amount)
+            :base(supplier,amount)
+        {
+            this.type = type;
+        }
+
+
+
+        //methods
+        public string PrintConsumablesInfo()
+        {
+
+            return String.Format("{0}:{1} {2}\nContact person:{3}",this.type,this.Amount,GiveDimensionConsumables(this.type) ,this.CurrentMaterialSupplier.PrintInfo());
+        }
+
+        public string GiveDimensionConsumables(ConsumablesEnum type )
+        {
+            Dictionary<ConsumablesEnum, string> dimensions = new Dictionary<ConsumablesEnum, string>();
+            dimensions.Add(ConsumablesEnum.Water, "l");
+            dimensions.Add(ConsumablesEnum.WeldingMaterials, "boxes");
+            dimensions.Add(ConsumablesEnum.Paper, "packages");
+
+             return dimensions[type];
+         }
+
+    }
+}
