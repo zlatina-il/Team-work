@@ -1,0 +1,78 @@
+using System;
+using System.Collections.Generic;
+
+namespace BuildingCompanyDatabase
+{
+    public class Material
+    {
+        //fields
+        public TypeOfMaterialsEnum type { get; private set; }
+        private Supplier supplier;
+        private double amount;
+
+        //constructor
+        public Material(TypeOfMaterialsEnum type, Supplier supplier, double amount)
+        {
+            this.type = type;
+            this.supplier = supplier;
+            this.amount = amount;
+        }
+
+        public Material()
+        {
+            // TODO: Complete member initialization
+        }
+
+        //properties
+        public Supplier CurrentMaterialSupplier
+        {
+            get
+            {
+                return this.supplier;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentException("Enter supplier!");
+                }
+                this.supplier = value;
+            }
+        }
+
+        public double Amount
+        {
+            get
+            {
+                return this.amount;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The amount must be positive number!");
+                }
+                this.amount = value;
+            }
+        }
+
+        //methods
+        public string PrintMaterialInfo()
+        {
+
+            return String.Format("{0}:{1}{2}\nContact person:{3}",this.type,this.Amount,GiveDimension(this.type) ,this.CurrentMaterialSupplier.PrintInfo());
+        }
+
+        public  string GiveDimension(TypeOfMaterialsEnum type )
+        {
+             Dictionary<TypeOfMaterialsEnum, string> dimensions = new Dictionary<TypeOfMaterialsEnum, string>();
+             dimensions.Add(TypeOfMaterialsEnum.Concrete, "m3");
+             dimensions.Add(TypeOfMaterialsEnum.Bolts, "pieces");
+             dimensions.Add(TypeOfMaterialsEnum.Nuts, "pieces");
+             dimensions.Add(TypeOfMaterialsEnum.Sand, "m3");
+             dimensions.Add(TypeOfMaterialsEnum.Steel, "t");
+
+             return dimensions[type];
+         }
+    }
+}
