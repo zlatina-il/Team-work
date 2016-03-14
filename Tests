@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Globalization;
+using System.IO;
+
+namespace BuildingCompanyDatabase
+{
+    class Tests
+    {
+        static void PrintIntTxt(StructuralSite currentSite)
+        {
+            using (StreamWriter sw = new StreamWriter("..//..//statistics.txt"))
+            {
+                string temp = currentSite.ToString();
+                sw.WriteLine(temp);               
+            }
+            Console.WriteLine("Result is in statistics.txt");
+        }
+
+        static void Main()
+        {
+
+            DateTime endDate;
+            Console.WriteLine( "-------------------- M E N U --------------------");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("1. Print actual state of the site for today");
+            Console.WriteLine("2. Print actual state of the site for other date");
+            Console.WriteLine("3. Print actual state of the site for today in text file");
+            Console.WriteLine("4. Print state of the site for other date in text file");
+            Console.WriteLine("5. Print Daily Expences");
+            Console.WriteLine("-------------------------------------------------");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("bg-BG");
+
+            int choice;
+            try
+            {
+                choice = int.Parse(Console.ReadLine());
+                if (choice<1||choice>5)
+                {
+                    throw new InvalidInputException<int>(1, 2,"The number shoud be [1..5]");
+                }
+                if (choice == 1 || choice == 3)
+                {
+                endDate = DateTime.Now;
+            }
+            else
+            {
+                Console.WriteLine("Enter date to print actual state");
+                    bool isDate = DateTime.TryParse(Console.ReadLine(), out endDate );
+                    if (!isDate)
+                    {
+                        throw new InvalidInputException<DateTime>("Invalid format");
+            }
+                }
+                StructuralSite Varna = new StructuralSite("Varna", DateTime.Parse("13.03.2013"), new Account(1000000));
+
+
+            Worker person1 = new Worker("Ivan", "Ivanov", WorkerProffesion.Installer,DateTime.Parse("13.03.2013"),15M,endDate);
+            Worker person2 = new Worker("Pehso", "Petrov", WorkerProffesion.Welder, DateTime.Parse("13.03.2013"), 15.05M,endDate);
+
+                Manager manager1 = new Manager("Ivan", "Drenkov", DateTime.Parse("13.03.2013"), 60M, endDate);
+
+                Mechanisation crane1 = new Mechanisation("crane", DateTime.Parse("13.03.2013"), "Liebher 15t", 36, 500M, endDate);
+                Mechanisation bager1 = new Mechanisation("bager", DateTime.Parse("13.03.2013"), "Bobcat CRR3", 12, 360M, endDate);
+
+                Supplier supplier1 = new Supplier("Stoyan", "Petrov", "0898534234", "ubmil21@abv.bg", "BULCONCRETE");
+                ConstructionMaterial mat1 = new ConstructionMaterial(TypeOfMaterialsEnum.Concrete, supplier1, 50);
+            Supplier supplier2 = new Supplier("Stoyan", "Petrov", "0898534234", "ubmil21@abv.bg", "BULCONCRETE");
+            ConstructionMaterial mat2 = new ConstructionMaterial(TypeOfMaterialsEnum.Steel, supplier2, 600);
+            //ConstructionMaterial mat3 = new ConstructionMaterial(TypeOfMaterialsEnum.Steel, supplier2, 400);
+
+            Supplier supplier11 = new Supplier("Marin", "Marinov", "023598742", "someone@example.com", "DEVIN");
+            Consumables consum1 = new Consumables(ConsumablesEnum.Water, supplier11, 100);
+            Supplier supplier12 = new Supplier("Ivan", "Ivanov", "088886414", "someone@example.com", "Office1");
+            Consumables consum2 = new Consumables(ConsumablesEnum.Paper, supplier12, 3);
+
+            Equipment equipment1 = new Equipment("scaffolding", "Perri", 100, "pcs");
+            Equipment equipment2 = new Equipment("water machine", "Devin", 1, "pcs");
+            Equipment equipment3 = new Equipment("chemical WC", "CleanWC", 5, "pcs");
+
+            Varna.AddStuff(person1);
+            Varna.AddStuff(person2);
+            Varna.AddManager(manager1);
+            Varna.AddMechanisation(crane1);
+            Varna.AddMechanisation(bager1);
+            Varna.AddMaterial(mat1);
+            Varna.AddMaterial(mat2);
+            //Varna.AddMaterial(mat3);
+            Varna.AddConsumable(consum1);
+            Varna.AddConsumable(consum2);
+            Varna.AddEquipment(equipment1);
+            Varna.AddEquipment(equipment2);
+            Varna.AddEquipment(equipment3);
+
+                if (choice == 1 || choice == 2)
+	            {
+            Console.WriteLine(Varna);
+                    Console.WriteLine("Daily expences - {0}", Varna.CalculateTotalCostPerDay());
+	            }
+                else if (choice == 3)
+                {
+                    PrintIntTxt(Varna);
+                }
+                else if (choice == 4)
+                {
+                    PrintIntTxt(Varna);
+                }
+                else if (choice == 5)
+                {
+                    Console.WriteLine("Starting balance : {0}", Varna.SiteAccount.Balance);
+                    Console.WriteLine("Daily expences : {0}", Varna.CalculateTotalCostPerDay());
+                    Varna.SiteAccount.Draw(Varna.BallanceToDate(endDate));
+                    Console.WriteLine("New balance : {0}", Varna.SiteAccount.Balance);
+                }
+            }
+            catch (InvalidInputException<int> iie)
+            {
+                Console.WriteLine("The number shoud be {0} or {1}", iie.StartRange, iie.EndRange);
+                Main();
+            }
+            catch (InvalidInputException<DateTime>)
+            {
+                Console.WriteLine("Not valid date");
+            }
+        }
+    }
+}
