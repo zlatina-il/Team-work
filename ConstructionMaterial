@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+
+namespace BuildingCompanyDatabase
+{
+    public class ConstructionMaterial : Materials
+    {
+        //fields
+        public TypeOfMaterialsEnum type { get; private set; }
+
+        //constructor
+        public ConstructionMaterial(TypeOfMaterialsEnum type, Supplier supplier, double amount):base(supplier,amount)
+        {
+            this.type = type;
+        }
+
+        //methods
+        public string PrintMaterialInfo()
+        {
+
+            return String.Format("{0}:{1}{2}\nContact person:{3}",this.type,this.Amount,GiveDimension(this.type) ,this.CurrentMaterialSupplier.PrintInfo());
+        }
+
+        public  string GiveDimension(TypeOfMaterialsEnum type )
+        {
+             Dictionary<TypeOfMaterialsEnum, string> dimensions = new Dictionary<TypeOfMaterialsEnum, string>();
+             dimensions.Add(TypeOfMaterialsEnum.Concrete, "m3");
+             dimensions.Add(TypeOfMaterialsEnum.Bolts, "pieces");
+             dimensions.Add(TypeOfMaterialsEnum.Nuts, "pieces");
+             dimensions.Add(TypeOfMaterialsEnum.Sand, "m3");
+             dimensions.Add(TypeOfMaterialsEnum.Steel, "t");
+
+             return dimensions[type];
+         }
+    }
+}
