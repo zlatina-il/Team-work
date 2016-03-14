@@ -1,0 +1,151 @@
+using System;
+
+namespace BuildingCompanyDatabase
+{
+    public class Mechanisation : IPayable
+    {
+
+        //fields
+        private string type;
+        private string model;
+        private int usagePeriodMonths;
+        private decimal costPerDay;
+        private DateTime startDate;
+        private DateTime endDate;
+
+        //constructor
+        public Mechanisation(string type, DateTime startDate, string model, int usagePeriodMonths, decimal costPerDay,DateTime endDate)
+        {
+            this.startDate = startDate;
+            this.EndDate = endDate;
+            this.type = type;
+            this.model = model;
+            this.usagePeriodMonths = usagePeriodMonths;
+            this.costPerDay = costPerDay;
+            this.EndDate = endDate;
+        }
+        
+        //properties
+        public DateTime StartDate
+        {
+            get
+            {
+                return this.startDate;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Enter a date !");
+                }
+                this.startDate = value;
+            }
+        }
+
+        public decimal CostPerDay
+        {
+            get
+            {
+                return this.costPerDay;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The payment per day must be positive number!");
+                }
+                this.costPerDay = value;
+            }
+        }
+        public DateTime EndDate
+        {
+            get
+            {
+                return this.endDate;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Enter a date !");
+                }
+                this.endDate = value;
+            }
+        }
+        public string Type
+        {
+            get
+            {
+                return this.type;
+            }
+            set
+            {
+                if (value == "")
+                {
+                    throw new ArgumentException("Enter a type");
+                }
+
+                foreach (char item in value)
+                {
+                    if (char.IsDigit(item))
+                    {
+                        throw new ArgumentException("Digits are not allowed!");
+                    }
+                }
+                this.type = value;
+            }
+        }
+
+        public string Model
+        {
+            get
+            {
+                return this.model;
+            }
+            set
+            {
+                if (value == "")
+                {
+                    throw new ArgumentException("Enter a type");
+                }
+
+                foreach (char item in value)
+                {
+                    if (char.IsDigit(item))
+                    {
+                        throw new ArgumentException("Digits are not allowed!");
+                    }
+                }
+                this.model = value;
+            }
+        }
+
+        public int UsagePeriodMonths
+        {
+            get
+            {
+                return this.usagePeriodMonths;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The usage period must be positive number!");
+                }
+                this.usagePeriodMonths = value;
+            }
+        }
+
+        //methods
+        public decimal CalculateTotalCosts(DateTime today)
+        {
+            int workingDays = (today - this.startDate).Days;
+            return workingDays * this.costPerDay;
+        }
+
+        public string PrintMechanisationInfo()
+        {
+            return String.Format("{0} {1}\t\t\t Costs:{2:C2}", this.Type, this.Model, this.CalculateTotalCosts(endDate));
+        }
+    }
+}
