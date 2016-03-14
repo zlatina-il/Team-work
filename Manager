@@ -1,0 +1,80 @@
+using System;
+
+namespace BuildingCompanyDatabase
+{
+    public class Manager : Person, IPayable
+    {
+        //fields
+        private DateTime startDate;
+        private decimal costPerDay;
+        private DateTime endDate;
+
+        //constructor
+        public Manager(string firstName, string lastName,DateTime startDate, decimal costPerDay,DateTime endDate) : base(firstName, lastName)
+        {
+            this.CostPerDay = costPerDay;
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+        }
+
+        //properties
+        public DateTime StartDate
+        {
+            get
+            {
+                return this.startDate;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Enter a date !");
+                }
+                this.startDate = value;
+            }
+        }
+        public DateTime EndDate
+        {
+            get
+            {
+                return this.endDate;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Enter a date !");
+                }
+                this.endDate = value;
+            }
+        }
+        public decimal CostPerDay
+        {
+            get
+            {
+                return this.costPerDay;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The payment per day must be positive number!");
+                }
+                this.costPerDay = value;
+            }
+        }
+
+        //methods
+        public override string PrintInfo()
+        {
+            return String.Format("{0} {1}\t\t\t\tSalary:{2:C2}", base.FirstName, base.LastName,this.CalculateTotalCosts(this.endDate));
+        }
+       
+        public decimal CalculateTotalCosts(DateTime today)
+        {
+
+            int workingDays = (today - this.startDate).Days;
+            return workingDays * this.costPerDay;
+        }
+    }
+}
