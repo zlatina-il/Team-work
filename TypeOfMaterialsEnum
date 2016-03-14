@@ -1,0 +1,11 @@
+using System;
+using System.Collections.Generic;
+
+namespace BuildingCompanyDatabase
+{
+    public enum TypeOfMaterialsEnum
+    {
+        Concrete, Steel, Sand, WoodBeams, Bolts, Nuts
+    }
+    
+}
