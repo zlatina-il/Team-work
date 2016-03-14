@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BuildingCompanyDatabase
+{
+    public struct Equipment
+    {
+        public string name;
+        public string model;
+        public int count;
+        public string dimension;
+
+        public Equipment(string name, string model, int count, string dimension)
+        {
+            this.name = name;
+            this.model = model;
+            this.count = count;
+            this.dimension = dimension;
+        }
+        public string PrintEquipment()
+        {
+            return String.Format("{0} {1} \t Amount: {2} {3}",this.name,this.model,this.count,this.dimension);
+        }
+
+    }
+}
