@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BuildingCompanyDatabase
+{
+    class InvalidInputException<T>:Exception
+        where T : struct,IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+    {
+        public T StartRange { get; set; }
+        public T EndRange { get; set; }
+
+        public InvalidInputException(T startRange, T endRange, string message)
+            : base(message)
+        {
+            this.StartRange = startRange;
+            this.EndRange = endRange;
+        }
+         public InvalidInputException(T startRange, T endRange)
+        {
+            this.StartRange = startRange;
+            this.EndRange = endRange;
+        }
+         public InvalidInputException(string message)
+         {
+         }
+
+
+    }
+}
