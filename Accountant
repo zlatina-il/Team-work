@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BuildingCompanyDatabase
+{
+    public class Accountant: Person
+    {
+        //field
+        private int salary;
+
+        //constructor
+        public Accountant(string firstName, string lastName, int salary)
+            : base(firstName, lastName)
+        {
+            this.salary = salary;
+        }
+
+        //method
+        public override string PrintInfo()
+        {
+            return String.Format("{0} {1}\t  Salary: {3:C2}", base.FirstName, base.LastName, this.salary);
+        }
+    }
+}
